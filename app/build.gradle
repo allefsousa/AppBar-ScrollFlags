@@ -1,0 +1,80 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+    compileSdkVersion globalConfiguration["compileSDK"]
+    buildToolsVersion globalConfiguration["buildTools"]
+    defaultConfig {
+        applicationId "com.developer.allef.boilerplateapp"
+        minSdkVersion globalConfiguration["minSDK"]
+        targetSdkVersion globalConfiguration["targetSDK"]
+        versionCode 1
+        versionName "0.0.0.1"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            minifyEnabled false
+            shrinkResources false
+            useProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            testCoverageEnabled = true
+        }
+    }
+    bundle {
+        language {
+            enableSplit = true
+        }
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+    flavorDimensions "version"
+    productFlavors {
+        homolog {
+            applicationId "com.developer.allef.boilerplateapp.homolog"
+            resValue "string", "app_name", "BooilerPlate App Homolog"
+            dimension "version"
+
+        }
+        prod {
+            applicationId "com.developer.allef.boilerplateapp"
+            resValue "string", "app_name", "BooilerPlate App"
+            dimension "version"
+
+        }
+    }
+
+
+}
+
+dependencies {
+
+    rootProject.appFoundationModule.each {
+        add(it.configuration, it.dependency, it.options)
+    }
+    rootProject.appNetworkingModule.each {
+        add(it.configuration, it.dependency, it.options)
+    }
+    rootProject.appTestingModule.each {
+        add(it.configuration, it.dependency, it.options)
+    }
+
+
+}
